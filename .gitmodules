@@ -1,0 +1,6 @@
+[submodule "submodules/LegendaryExplorer"]
+	path = submodules/LegendaryExplorer
+	url = https://github.com/ME3Tweaks/LegendaryExplorer
+[submodule "submodules/LEASIMods"]
+	path = submodules/LEASIMods
+	url = https://github.com/ME3Tweaks/LEASIMods

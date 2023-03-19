@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LE3LevelGen.cpp">
+    <ClCompile Include="LEC_NativeTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

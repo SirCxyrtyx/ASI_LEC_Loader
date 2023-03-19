@@ -5,10 +5,9 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendaryExplorerCore_Native", "LegendaryExplorerCore_Native\LegendaryExplorerCore_Native.csproj", "{DA023AAD-0397-4792-B771-C81B2F98B9A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LE3LevelGen", "LE3LevelGen\LE3LevelGen.vcxproj", "{1B6184C0-C284-4D11-B360-29657979A66D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LEC_NativeTest", "LEC_NativeTest\LEC_NativeTest.vcxproj", "{1B6184C0-C284-4D11-B360-29657979A66D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8DA34EDE-7D5C-4DA3-8841-78AB05E8C6D2} = {8DA34EDE-7D5C-4DA3-8841-78AB05E8C6D2}
-		{DA023AAD-0397-4792-B771-C81B2F98B9A1} = {DA023AAD-0397-4792-B771-C81B2F98B9A1}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendaryExplorerCore", "submodules\LegendaryExplorer\LegendaryExplorer\LegendaryExplorerCore\LegendaryExplorerCore.csproj", "{375517FE-4C47-4756-8BEC-C7D80C0CAB79}"

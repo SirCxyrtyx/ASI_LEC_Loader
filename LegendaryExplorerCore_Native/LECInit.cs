@@ -4,7 +4,10 @@ using LegendaryExplorerCore;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
+using LegendaryExplorerCore.Textures;
+using LegendaryExplorerCore.Unreal;
 using LegendaryExplorerCore.Unreal.BinaryConverters;
+using LegendaryExplorerCore.Unreal.Classes;
 
 namespace LegendaryExplorerCore_Native
 {
@@ -12,7 +15,7 @@ namespace LegendaryExplorerCore_Native
     {
         private static delegate* unmanaged<ulong, void*> NativeAlloc;
 
-        [UnmanagedCallersOnly(EntryPoint = "LEC_NativeInit")]
+        [UnmanagedCallersOnly(EntryPoint = nameof(LEC_NativeInit))]
         public static void LEC_NativeInit(int meGameToInitFor, delegate* unmanaged<ulong, void*> nativeAlloc)
         {
             try
@@ -28,7 +31,32 @@ namespace LegendaryExplorerCore_Native
             }
         }
 
-        [UnmanagedCallersOnly(EntryPoint = "LEC_TestMethod")]
+        [UnmanagedCallersOnly(EntryPoint = nameof(LEC_LoadPccUncompressed))]
+        public static void* LEC_LoadPccUncompressed(char* filePath, int* packageDataSize)
+        {
+            try
+            {
+                using IMEPackage pcc = MEPackageHandler.OpenMEPackage(new string(filePath));
+
+                Borgerify(pcc);
+
+                using MemoryStream ms = pcc.SaveToStream(false);
+                ms.Position = 0;
+                int allocSize = (int)ms.Length;
+                void *packageData = NativeAlloc((ulong)allocSize);
+                ms.ReadToSpan(new Span<byte>(packageData, allocSize));
+                *packageDataSize = allocSize;
+                return packageData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.FlattenException());
+                *packageDataSize = 0;
+                return null;
+            }
+        }
+
+        [UnmanagedCallersOnly(EntryPoint = nameof(LEC_TestMethod))]
         public static char* LEC_TestMethod(char* packagePath)
         {
             try
@@ -52,5 +80,30 @@ namespace LegendaryExplorerCore_Native
             }
             return null;
         }
+
+        private static void Borgerify(IMEPackage pcc)
+        {
+            const string imagePath = "Borger.PNG";
+            foreach (ExportEntry exportEntry in pcc.Exports.Where(exp => exp.ClassName == "Texture2D"))
+            {
+                try
+                {
+                    var props = exportEntry.GetProperties();
+                    var listedWidth = props.GetProp<IntProperty>("SizeX")?.Value ?? 0;
+                    var listedHeight = props.GetProp<IntProperty>("SizeY")?.Value ?? 0;
+                    Image image = Image.LoadFromFile(imagePath, PixelFormat.ARGB);
+                    if (image.mipMaps[0].origWidth / image.mipMaps[0].origHeight != listedWidth / listedHeight)
+                    {
+                        continue;
+                    }
+                    var texture = new Texture2D(exportEntry);
+                    texture.Replace(image, props, imagePath, isPackageStored: true);
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+            }
+        } 
     }
 }
